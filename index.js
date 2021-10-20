@@ -1,15 +1,15 @@
 const inquirer = require("inquirer");
 const fs = require('fs');
 const path = require('path');
-const renderHtml = require('./src/template')
+const {generateTeam} = require('./src/template');
 const Engineer = require('./lib/Engineer');
 const Manager = require('./lib/Manager');
 const Intern = require('./lib/intern');
 const Employee = require("./lib/Employee");
 const employeeArr = [];
 
-const outputDirectory = path.resolve(__dirname, 'output');
-const outputPath = path.join(outputDirectory, 'team.html');
+// const outputDirectory = path.resolve(__dirname, 'output');
+// const outputPath = path.join(outputDirectory, 'team.html');
 
  const createManager = () => {
      inquirer.prompt([
@@ -35,7 +35,9 @@ const outputPath = path.join(outputDirectory, 'team.html');
         },
 
      ]).then(resp => {
+         console.log(resp);
          const manager = new Manager(resp.managerName, resp.managerId, resp.email, resp.managerOfficeNumber);
+         console.log(manager);
          employeeArr.push(manager);
          addEmployee();
      })
@@ -102,15 +104,17 @@ const outputPath = path.join(outputDirectory, 'team.html');
      })
  }
 
- const renderTeam = () => {
-     if(!fs.existsSync(outputDirectory)){
-         fs.mkdirSync(outputDirectory);
+//  const renderTeam = () => {
+//      if(!fs.existsSync(outputDirectory)){
+//          fs.mkdirSync(outputDirectory);
 
-     }
+//      }
 
-     fs.writeFileSync(outputPath, renderHtml(employeeArr), 'utf-8');
+//      fs.writeFileSync(outputPath, renderHtml(employeeArr), 'utf-8');
 
- }
+//  }
+
+
 
  const addEmployee = () => {
      inquirer.prompt([
@@ -129,7 +133,8 @@ const outputPath = path.join(outputDirectory, 'team.html');
                 createIntern();
                 break;
             case "I don't want to add anymore employees.":
-                renderTeam();
+                console.log(typeof employeeArr);
+                renderTeam(employeeArr);
                 break;
          }
      })
@@ -137,7 +142,13 @@ const outputPath = path.join(outputDirectory, 'team.html');
 
  }
 
-createManager();
+ const renderTeam = (res) =>{
+     console.log("Yo DO I SHOW UP?", res);
+   // fs.writeFileSync('team.html', generateTeam(res), 'utf-8')
+    generateTeam(res);
+}
+
+// createManager();
 // createEngineer();
 // createIntern();
 
